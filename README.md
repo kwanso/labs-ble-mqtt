@@ -1,82 +1,52 @@
-<h1 align="center">
-  KIOT MQTT
-</h1>
+Project IOT (BLE/MQTT) Showcasing BLE and MQTT Connectivity between a React Native Mobile Application, MQTT Server and a Pi Device.
 
-# What is the idea?
+Overview:
 
-In this project, we have controlled an LED connected to the Raspberry Pi GPIO port. The Raspberry device port will be controlled
-from anywhere around the globe using the KIOT MQTT products.
+Project IOT (BLE/MQTT) is an innovative internal project designed to illustrate the seamless integration of Bluetooth Low Energy (BLE) and Message Queuing Telemetry Transport (MQTT) using a Pi device as receiver of commands in which we can see the LEDs functional. The project follows a series of experiments available on our repo as well.
 
-# What is the MQTT?
+Components:
 
-MQTT is a global standard protocol used in IOT and many real-time POS systems as well.
+1. Raspberry Pi:
 
-# How does it work?
+- BLE Peripheral Role: Configured to operate as a BLE peripheral, the Raspberry Pi continuously advertises its presence to nearby devices. It broadcasts specific data packets that can be discovered by BLE-enabled mobile devices.
 
-To make things work we will have to configure a mqtt server. We have used the HiveMQ mqtt server for the project.
+- Sensor Integration: Various sensors (e.g., temperature, humidity, light sensors) are connected to the Raspberry Pi. These sensors collect real-time data, which the Pi processes and packages into standardized BLE advertising packets.
 
-## Create an mqtt server using HiveMQ (Preferred)
-   1. Go to any open source mqtt server like HiveMQ https://www.hivemq.com/ and create an account.
-      You can choose a free plan.
-   2. Create an organization and then create a Cluster.
-   3. Get your username and password from the web client.
-   4. Create a topic named 'led'.
-   5. Use this topic subscription in all three products.
-   
-## OR
+- BLE Advertisements: The Raspberry Pi uses GATT (Generic Attribute Profile) services and characteristics to structure the data it sends out. It regularly updates these characteristics with new sensor data.
 
-## Use iot_microserivce-backend and frontend-mosquito-supported
+2. React Native Mobile Application:
 
-  🎯 **iot_microserivce-backend** - It is a webservice for implementing mosquito server.
-   
-   It is a microservice to start a mosquito server on a backend machine. You can use it instead of HiveMQ but we prefer to use HiveMQ for proper working of all three products.
+- Discovery and Connection: Developed with React Native, the mobile application scans for nearby BLE devices. Upon discovering the Raspberry Pi, the app connects to it using standardized BLE connection procedures.
+- Serve as client: Mobile App can also connect to a remote MQTT server (any open source available) and one can ask MQTT server to send a switch on or off to the Pi Device (connected to MQTT server)
 
-   You can see mosquito server apis implemented by frontend-mosquito-supported. 
-   
-  🎯 **frontend-mosquito-supported** - It is a web front-end implementing mosquito server apis.
+- Command Transmission: Once connected, the mobile application can send commands to the Raspberry Pi. These commands include requests for specific sensor data, configuration changes, or triggering specific actions on the Pi.
 
+- Real-Time Updates: The mobile app listens for notifications or indications from the Raspberry Pi, allowing it to receive real-time updates whenever new sensor data is available or when a specific event occurs.
 
-# 🚀 Products?
-KIOT MQTT has three key products: 
+3. MQTT Server:
 
-🎯 **kiot-mqtt-mobile** - To control a Raspberry Pi GPIO port (LED) from the mobile.
+- Data Broker: An MQTT server acts as the intermediary for data transmission between the Raspberry Pi and the mobile application. The Raspberry Pi publishes sensor data to specific MQTT topics, which the mobile application subscribes to.
 
-🎯 **web-app** - To control a Raspberry Pi GPIO port (LED) from the web.
+- Command Handling: When the mobile application sends a command, it publishes it to a designated MQTT topic, which the Raspberry Pi is subscribed to. This decoupled communication model ensures scalability and allows for more advanced feature implementation in the future.
 
-🎯 **raspberry-desktop** - The running program that will run on a Raspberry Pi device.
+- Efficiency and Scalability: MQTT, known for its lightweight and efficient message handling, is ideal for this project. It ensures that communication remains fast and reliable, even over constrained networks.
 
+Under the hood:
 
-# 📱 kiot-mqtt-mobile
+- BLE Configuration on Raspberry Pi: We have Used Node on the Pi Device and using node package manager (npm) we have used ble-host to control the Pi device. All this has been done using JS.
 
-The kiot-mqtt-mobile is a mobile application made on React Native. You will run it on an Android Device.
+- Sensor Data Acquisition: JS scripts run on the Raspberry Pi to continuously read data from the connected sensors. These scripts are responsible for updating the BLE characteristics with new sensor values.
 
-# 💻 web-app
+- MQTT Communications: The Node MQTT packages are used on the Raspberry Pi to publish collected data to the MQTT server. The React Native application uses a compatible MQTT client library, such as react-native-mqtt to handle subscriptions and publish commands.
 
-The web-app is a web app made on React. You will run it on any Windows/Linux/Mac device.
+User Experience:
 
-# 💻 raspberry-desktop (Where you will see the magic)
+- Interaction Ease: Users can effortlessly connect to the Raspberry Pi from their mobile devices, view live sensor data, and send commands with just a few taps.
 
-You will run the Mqtt.js file on Raspberry Pi Desktop (A raspbian OS). For this, you will need Node installed on your
-raspberry desktop and have configured the required node-modules as well. 
+- Real-Time Monitoring: The React Native app provides real-time monitoring, with data updating almost instantaneously thanks to the efficient MQTT protocol.
 
-After starting the Mqtt.JS using sudo node Mqtt.js you will connect the LED using a breadboard using two GPIO ports
-  1. The continuous 5v GPIO port.
-  2. The GPIO port 14 which we will control using Mqtt.
+- Scalability and Extensibility: The project's architecture supports the addition of more sensors, more complex commands, and additional features such as data logging and alerts, making it a versatile and scalable IoT solution.
 
-##  Prerequisites
-  **Raspberry Pi Device Specs**
- 
-  Model: Raspberry Pi 4 Model B Rev 1.2
-  Raspberian OS : Linux version 5.10.103-v7l+ (dom@buildbot) (arm-linux-gnueabihf-gcc-8 (Ubuntu/Linaro 8.4.0-3ubuntu1) 8.4.0, GNU ld (GNU Binutils for Ubuntu) 2.34) #1529 SMP Tue Mar 8 12:24:00 GMT 2022
+Conclusion:
 
-
- **Raspberry Pi Device Using Node**
-
-- If you are not logged in as a root user then use sudo before every command execution.
-- Install node version 16.X on your Pi device or you can install the latest version.
-- Confirm node version node js version using node -v or nodejs -v commands.
-- Install latest npm version.
-- Run command sudo npm install onoff - An npm package to control GPIO pins on Pi device.
-
-## 🗒️ Credits
-**Kwanso Mobile Team**
+Project BLE/MQTT successfully demonstrates the practical application of BLE and MQTT in an IoT ecosystem. The integration of a Raspberry Pi, a React Native mobile application, and an MQTT server provides a robust framework that can be adapted for various real-world applications, such as smart home systems, industrial monitoring, and environmental sensing. Through this project, the potential of combining these technologies to create efficient and scalable IoT solutions is vividly showcased.
